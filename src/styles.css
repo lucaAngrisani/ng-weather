@@ -2,3 +2,25 @@
 body {
   padding: 10px;
 }
+
+.flex {
+  display: flex;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.margined {
+  margin-left: 0.7rem;
+  margin-right: 0.7rem;
+}
+
+.padded {
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.selected {
+  background-color: lightblue;
+}

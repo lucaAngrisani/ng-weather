@@ -1,25 +1,42 @@
-import {Component, inject, Signal} from '@angular/core';
-import {WeatherService} from "../weather.service";
-import {LocationService} from "../location.service";
-import { Router, RouterLink } from "@angular/router";
-import {ConditionsAndZip} from '../conditions-and-zip.type';
-import { NgFor, DecimalPipe } from '@angular/common';
+import { JsonPipe, NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, Signal } from '@angular/core';
+import { LocationConditionComponent } from 'app/location-condition/location-condition.component';
+import { LocationService } from 'app/location.service';
+import { ConditionsAndZip } from '../conditions-and-zip.type';
+import { WeatherService } from "../weather.service";
 
 @Component({
-    selector: 'app-current-conditions',
-    templateUrl: './current-conditions.component.html',
-    styleUrls: ['./current-conditions.component.css'],
-    standalone: true,
-    imports: [NgFor, RouterLink, DecimalPipe]
+  selector: 'app-current-conditions',
+  templateUrl: './current-conditions.component.html',
+  styleUrls: ['./current-conditions.component.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    JsonPipe,
+    LocationConditionComponent
+  ]
 })
-export class CurrentConditionsComponent {
+export class CurrentConditionsComponent implements OnInit {
 
-  private weatherService = inject(WeatherService);
-  private router = inject(Router);
-  protected locationService = inject(LocationService);
   protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
+  protected selectedLocation: Signal<ConditionsAndZip> = this.weatherService.getSelectedCondition();
 
-  showForecast(zipcode : string){
-    this.router.navigate(['/forecast', zipcode])
+  constructor(
+    private locationService: LocationService,
+    protected weatherService: WeatherService,
+  ) { }
+
+  ngOnInit() {
+
+  }
+
+  removeLocation(zipcode: string) {
+    this.locationService.removeLocation(zipcode);
+    this.weatherService.removeCurrentConditions(zipcode);
+
+    if (this.selectedLocation()?.zip == zipcode) {
+      this.weatherService.selectCondition(this.currentConditionsByZip()?.[0]);
+    }
   }
 }

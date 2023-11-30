@@ -8,6 +8,6 @@ import { ZipcodeEntryComponent } from '../zipcode-entry/zipcode-entry.component'
     standalone: true,
     imports: [ZipcodeEntryComponent, CurrentConditionsComponent]
 })
-export class MainPageComponent {
+export default class MainPageComponent {
 
 }

@@ -1,17 +1,25 @@
 import { Component } from '@angular/core';
-import {LocationService} from "../location.service";
+import { WeatherService } from 'app/weather.service';
+import { LocationService } from "../location.service";
 
 @Component({
-    selector: 'app-zipcode-entry',
-    templateUrl: './zipcode-entry.component.html',
-    standalone: true
+  selector: 'app-zipcode-entry',
+  templateUrl: './zipcode-entry.component.html',
+  standalone: true
 })
 export class ZipcodeEntryComponent {
 
-  constructor(private service : LocationService) { }
+  constructor(
+    private locationService: LocationService,
+    private weatherService: WeatherService,
+  ) { }
 
-  addLocation(zipcode : string){
-    this.service.addLocation(zipcode);
+  async addLocation(zipcode: string) {
+    const locations = this.locationService.locations.getValue();
+    if (locations.every(location => location != zipcode)) {
+      zipcode = await this.weatherService.addCurrentConditions(zipcode, true);
+      zipcode && this.locationService.addLocation(zipcode);
+    }
   }
 
 }
