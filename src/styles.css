@@ -24,3 +24,7 @@ body {
 .selected {
   background-color: lightblue;
 }
+
+.justify-content-center {
+  justify-content: center;
+}

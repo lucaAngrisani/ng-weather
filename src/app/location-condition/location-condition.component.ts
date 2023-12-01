@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ConditionsAndZip } from 'app/conditions-and-zip.type';
+import { ConditionsAndZip } from 'app/models/conditions-and-zip.type';
 import { WeatherService } from 'app/weather.service';
 
 @Component({

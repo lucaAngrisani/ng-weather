@@ -2,15 +2,15 @@ import { Injectable, Signal, signal } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
-import { ConditionsAndZip } from './conditions-and-zip.type';
-import { CurrentConditions } from './current-conditions/current-conditions.type';
-import { Forecast } from './forecasts-list/forecast.type';
 import { LocationService } from './location.service';
+import { ConditionsAndZip } from './models/conditions-and-zip.type';
+import { CurrentConditions } from './models/current-conditions.type';
+import { Forecast } from './models/forecast.type';
 
 @Injectable()
 export class WeatherService {
 
-  static URL = 'http://api.openweathermap.org/data/2.5';
+  static URL = 'https://api.openweathermap.org/data/2.5';
   static APPID = '5a4b2d457ecbef9eb2a71e480b947604';
   static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
 
@@ -32,11 +32,10 @@ export class WeatherService {
   async addCurrentConditions(zipcode: string, updateSelected: boolean = false): Promise<string> {
     // Here we make a request to get the current conditions data from the API. Note the use of backticks and an expression to insert the zipcode
     const data = await firstValueFrom(this.http.get<CurrentConditions>(`${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`));
-    console.log(data);
     const condition = { zip: zipcode, data };
     this.currentConditions.update(conditions => {
       conditions.push(condition);
-      return conditions;
+      return [...conditions];
     });
 
     updateSelected && this.selectCondition(condition);
@@ -57,7 +56,7 @@ export class WeatherService {
           conditions.splice(+i, 1);
       }
 
-      return conditions;
+      return [...conditions];
     })
   }
 

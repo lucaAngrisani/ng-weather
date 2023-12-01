@@ -2,7 +2,6 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { APP_INITIALIZER, enableProdMode, importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpInterceptorService } from 'app/http-interceptor.service';
 import { AppComponent } from './app/app.component';
@@ -28,7 +27,7 @@ bootstrapApplication(AppComponent, {
       useClass: HttpInterceptorService,
       multi: true,
     },
-    importProvidersFrom(BrowserModule, FormsModule, RouterModule, routing, ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })),
+    importProvidersFrom(BrowserModule, FormsModule, routing, ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })),
     LocationService, WeatherService,
     provideHttpClient(withInterceptorsFromDi())
   ]

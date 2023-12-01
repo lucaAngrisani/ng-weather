@@ -1,8 +1,10 @@
-import { JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, Signal } from '@angular/core';
 import { LocationConditionComponent } from 'app/location-condition/location-condition.component';
 import { LocationService } from 'app/location.service';
-import { ConditionsAndZip } from '../conditions-and-zip.type';
+import { ConditionsAndZip } from '../models/conditions-and-zip.type';
+import { ToElTabListPipe } from "../pipes/to-el-tab-list.pipe";
+import { ToTabListPipe } from "../pipes/to-tab-list.pipe";
+import { TabsComponent } from "../tabs/tabs.component";
 import { WeatherService } from "../weather.service";
 
 @Component({
@@ -11,9 +13,9 @@ import { WeatherService } from "../weather.service";
   styleUrls: ['./current-conditions.component.css'],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
-    JsonPipe,
+    ToTabListPipe,
+    ToElTabListPipe,
+    TabsComponent,
     LocationConditionComponent
   ]
 })
@@ -27,9 +29,7 @@ export class CurrentConditionsComponent implements OnInit {
     protected weatherService: WeatherService,
   ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
   removeLocation(zipcode: string) {
     this.locationService.removeLocation(zipcode);

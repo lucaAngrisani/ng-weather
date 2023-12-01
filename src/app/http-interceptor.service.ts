@@ -28,8 +28,6 @@ export class HttpInterceptorService {
       return of(new HttpResponse(httpResponse));
     }
 
-    this.cacheService.getFromCache(request.url);
-
     return next.handle(request).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {

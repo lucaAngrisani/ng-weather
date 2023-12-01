@@ -1,3 +1,4 @@
+@if (location) {
 <div class="flex">
   <div>
     <h4>Current conditions: {{location.data.weather[0].main}}</h4>
@@ -16,3 +17,4 @@
     <img [src]="weatherService.getWeatherIcon(location.data.weather[0].id)" alt="weather-icon">
   </div>
 </div>
+}

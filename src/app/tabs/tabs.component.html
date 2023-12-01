@@ -1,0 +1,15 @@
+<div class="flex">
+  @for(item of list; track item.id) {
+  <div class="flex margined padded" [class]="item.id == selectedItem?.id ? 'selected' : ''">
+    <div class="cursor-pointer" (click)="onSelect.emit(item.value)">
+      <h3>{{item.name}}</h3>
+    </div>
+
+    <span class="cursor-pointer" (click)="onRemove.emit(item.id)">X</span>
+  </div>
+  }
+</div>
+
+<div class="flex justify-content-center">
+  <ng-content></ng-content>
+</div>

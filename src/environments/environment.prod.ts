@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  minCaching: 120,
+  minutesCaching: 120,
 };

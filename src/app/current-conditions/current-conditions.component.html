@@ -1,14 +1,6 @@
 <div class="flex">
-  <div *ngFor="let location of currentConditionsByZip()" class="flex margined padded"
-    [class]="location.zip == selectedLocation()?.zip ? 'selected' : ''">
-    <div class="cursor-pointer" (click)="weatherService.selectCondition(location)">
-      <h3>{{location.data.name}} ({{location.zip}})</h3>
-    </div>
-
-    <span class="cursor-pointer" (click)="removeLocation(location.zip)">X</span>
-  </div>
-</div>
-
-<div *ngIf="selectedLocation() as selectedCondition">
-  <app-location-condition [location]="selectedCondition"></app-location-condition>
+  <app-tabs [list]="currentConditionsByZip() | toTabList" [selectedItem]="selectedLocation() | toElTabList" 
+    (onSelect)="weatherService.selectCondition($event)" (onRemove)="removeLocation($event)">
+    <app-location-condition [location]="selectedLocation()"></app-location-condition>
+  </app-tabs>
 </div>
