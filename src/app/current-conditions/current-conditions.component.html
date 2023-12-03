@@ -1,6 +1,15 @@
 <div class="flex">
-  <app-tabs [list]="currentConditionsByZip() | toTabList" [selectedItem]="selectedLocation() | toElTabList" 
-    (onSelect)="weatherService.selectCondition($event)" (onRemove)="removeLocation($event)">
-    <app-location-condition [location]="selectedLocation()"></app-location-condition>
+  <app-tabs (onRemove)="removeLocation($event)" (onSelect)="selectLocation($event)" [(activatedIndex)]="activatedIndex">
+    @for(tab of weatherService.getCurrentConditions(); track tab?.zip) {
+    <app-tab title="{{tab?.data?.name}} ({{tab?.zip}})">
+      <app-location-condition [location]="tab"></app-location-condition>
+    </app-tab>
+    }
   </app-tabs>
 </div>
+
+<!-- 
+  <app-tabs> should contains an array of <app-tab>
+  inside <app-tab> you could insert whatever you want
+  in our case, what we want is app-location-condition
+-->

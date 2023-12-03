@@ -17,7 +17,7 @@ export class ZipcodeEntryComponent {
   async addLocation(zipcode: string) {
     const locations = this.locationService.locations.getValue();
     if (locations.every(location => location != zipcode)) {
-      zipcode = await this.weatherService.addCurrentConditions(zipcode, true);
+      zipcode = await this.weatherService.addCurrentConditions(zipcode);
       zipcode && this.locationService.addLocation(zipcode);
     }
   }

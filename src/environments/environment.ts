@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  minutesCaching: 0.3,
+  minutesCaching: 120,
 };

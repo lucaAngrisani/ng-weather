@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal } from '@angular/core';
+import { EventEmitter, Injectable, Signal, signal } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,8 @@ export class WeatherService {
   static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
 
   private currentConditions = signal<ConditionsAndZip[]>([]);
-  private selectedCondition = signal<ConditionsAndZip>(null);
+
+  public onAddCondition: EventEmitter<number> = new EventEmitter();
 
   constructor(
     private http: HttpClient,
@@ -25,11 +26,11 @@ export class WeatherService {
   init() {
     const locations = this.locationService.locations.getValue();
     locations.forEach((zipcode, i) => {
-      this.addCurrentConditions(zipcode, i == 0);
+      this.addCurrentConditions(zipcode);
     });
   }
 
-  async addCurrentConditions(zipcode: string, updateSelected: boolean = false): Promise<string> {
+  async addCurrentConditions(zipcode: string): Promise<string> {
     // Here we make a request to get the current conditions data from the API. Note the use of backticks and an expression to insert the zipcode
     const data = await firstValueFrom(this.http.get<CurrentConditions>(`${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`));
     const condition = { zip: zipcode, data };
@@ -38,15 +39,8 @@ export class WeatherService {
       return [...conditions];
     });
 
-    updateSelected && this.selectCondition(condition);
-
+    this.onAddCondition.next(this.currentConditions().length - 1);
     return zipcode;
-  }
-
-  selectCondition(condition: ConditionsAndZip) {
-    this.selectedCondition.update(() => {
-      return condition;
-    })
   }
 
   removeCurrentConditions(zipcode: string) {
@@ -60,12 +54,8 @@ export class WeatherService {
     })
   }
 
-  getCurrentConditions(): Signal<ConditionsAndZip[]> {
+  get getCurrentConditions(): Signal<ConditionsAndZip[]> {
     return this.currentConditions.asReadonly();
-  }
-
-  getSelectedCondition(): Signal<ConditionsAndZip> {
-    return this.selectedCondition.asReadonly();
   }
 
   getForecast(zipcode: string): Observable<Forecast> {

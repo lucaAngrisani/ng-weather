@@ -1,9 +1,7 @@
-import { Component, OnInit, Signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LocationConditionComponent } from 'app/location-condition/location-condition.component';
 import { LocationService } from 'app/location.service';
-import { ConditionsAndZip } from '../models/conditions-and-zip.type';
-import { ToElTabListPipe } from "../pipes/to-el-tab-list.pipe";
-import { ToTabListPipe } from "../pipes/to-tab-list.pipe";
+import { TabComponent } from 'app/tabs/tab/tab.component';
 import { TabsComponent } from "../tabs/tabs.component";
 import { WeatherService } from "../weather.service";
 
@@ -13,30 +11,34 @@ import { WeatherService } from "../weather.service";
   styleUrls: ['./current-conditions.component.css'],
   standalone: true,
   imports: [
-    ToTabListPipe,
-    ToElTabListPipe,
+    TabComponent,
     TabsComponent,
     LocationConditionComponent
   ]
 })
 export class CurrentConditionsComponent implements OnInit {
 
-  protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
-  protected selectedLocation: Signal<ConditionsAndZip> = this.weatherService.getSelectedCondition();
+  activatedIndex: number = 0;
 
   constructor(
     private locationService: LocationService,
     protected weatherService: WeatherService,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.activatedIndex = Number(sessionStorage.getItem(TAB_INDEX));
+    this.weatherService.onAddCondition.subscribe(index => this.activatedIndex = index);
+  }
 
-  removeLocation(zipcode: string) {
+  removeLocation(index: number) {
+    const zipcode = this.weatherService.getCurrentConditions()?.[index]?.zip;
     this.locationService.removeLocation(zipcode);
     this.weatherService.removeCurrentConditions(zipcode);
+  }
 
-    if (this.selectedLocation()?.zip == zipcode) {
-      this.weatherService.selectCondition(this.currentConditionsByZip()?.[0]);
-    }
+  selectLocation(index: number) {
+    sessionStorage.setItem(TAB_INDEX, JSON.stringify(index));
   }
 }
+
+const TAB_INDEX = "TAB_INDEX";

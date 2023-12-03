@@ -1,15 +1,16 @@
 <div class="flex">
-  @for(item of list; track item.id) {
-  <div class="flex margined padded" [class]="item.id == selectedItem?.id ? 'selected' : ''">
-    <div class="cursor-pointer" (click)="onSelect.emit(item.value)">
-      <h3>{{item.name}}</h3>
+  @for(item of content?.toArray(); track item.title) {
+  <!--div class="flex margined padded" [class]="item.id == selectedItem?.id ? 'selected' : ''"-->
+  <div class="flex margined padded" [class]="$index == activatedIndex ? 'selected' : ''">
+    <div class="cursor-pointer" (click)="select($index)">
+      <h3>{{item.title}}</h3>
     </div>
 
-    <span class="cursor-pointer" (click)="onRemove.emit(item.id)">X</span>
+    <span class="cursor-pointer" (click)="remove($index)">X</span>
   </div>
-  }
+  } @empty { <p>{{emptyMessage}}</p> }
 </div>
 
 <div class="flex justify-content-center">
-  <ng-content></ng-content>
+  <ng-container [ngTemplateOutlet]="content.get(activatedIndex)?.template"></ng-container>
 </div>
